@@ -9,6 +9,8 @@ struct audio_exception : public std::runtime_error {
 };
 
 void AUDIO_Init();
+void AUDIO_Shutdown();
+
 int AUDIO_LoadWav(const char* name);
 void AUDIO_Play(int id, int chan, bool loop);
 void AUDIO_Stop(int chan);

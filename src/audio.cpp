@@ -70,7 +70,7 @@ static void callback(void* userdata, uint8_t* stream, int len) {
 }
 
 void AUDIO_Init() {
-	if (SDL_Init(SDL_INIT_AUDIO) != 0) {
+	if (SDL_InitSubSystem(SDL_INIT_AUDIO) != 0) {
 		throw_error("SDL_Init Error: ");
 	}
 
@@ -86,6 +86,17 @@ void AUDIO_Init() {
 		throw_error("SDL_OpenAudioDevice error: ");
 	}
 	SDL_PauseAudioDevice(audioDevice, 0);
+}
+
+void AUDIO_Shutdown() {
+	SDL_PauseAudioDevice(audioDevice, 1);
+	SDL_CloseAudioDevice(audioDevice);
+
+	for (auto& wav : loadedWavs) {
+		SDL_FreeWAV((uint8_t*)(wav.sampleData);
+	}
+
+	SDL_QuitSubSystem(SDL_INIT_AUDIO);
 }
 
 int AUDIO_LoadWav(const char* name) {
