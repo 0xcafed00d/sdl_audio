@@ -6,8 +6,8 @@ CXX = g++
 SDL_LIB = -L/home/lmw/src/SDL2-2.0.9/build/.libs -lSDL2 -Wl,-rpath=/home/lmw/src/SDL2-2.0.9/build/.libs
 SDL_INCLUDE = -I/usr/local/include
 
-# CXXFLAGS = -ggdb -Wall -c -std=c++11 $(SDL_INCLUDE) -I$(UTF8_UTIL_BASE)
-CXXFLAGS = -O3 -Wall -c -std=c++11 $(SDL_INCLUDE) 
+CXXFLAGS = -ggdb -Wall -c -std=c++11 $(SDL_INCLUDE)
+# CXXFLAGS = -O3 -Wall -c -std=c++11 $(SDL_INCLUDE) 
 LDFLAGS = $(SDL_LIB) 
 EXE = audio
 

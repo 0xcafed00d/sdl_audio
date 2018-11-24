@@ -7,9 +7,19 @@
 int main(void) {
 	try {
 		AUDIO_Init();
-		AUDIO_LoadWav("xwing_41.wav");
-		SDL_Delay(5000);
+		int musicid = AUDIO_LoadWav("xwing_41.wav");
+		int sfx0id = AUDIO_LoadWav("jetdude0.wav");
+		int sfx1id = AUDIO_LoadWav("jetdude1.wav");
+		int sfx2id = AUDIO_LoadWav("jetdude2.wav");
+		int sfx3id = AUDIO_LoadWav("jetdude3.wav");
+		int sfx4id = AUDIO_LoadWav("jetdude4.wav");
 
+		AUDIO_Play(musicid, 0, true);
+
+		while (AUDIO_Playing(0)) {
+			SDL_Delay(1000);
+			AUDIO_Play(sfx0id, 1, false);
+		}
 	} catch (audio_exception& err) {
 		std::cerr << err.what() << std::endl;
 	}

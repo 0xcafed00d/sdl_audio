@@ -10,6 +10,7 @@ struct audio_exception : public std::runtime_error {
 
 void AUDIO_Init();
 int AUDIO_LoadWav(const char* name);
-void AUDIO_Play(int id);
+void AUDIO_Play(int id, int chan, bool loop);
+bool AUDIO_Playing(int chan);
 
 #endif /* SDL_AUDIO_H */
