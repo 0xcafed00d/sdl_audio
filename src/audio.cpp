@@ -49,12 +49,23 @@ static void throw_error(std::string msg) {
 	throw(audio_exception(msg));
 }
 
+inline int16_t clamp(int32_t s) {
+	if (s < INT16_MIN)
+		return INT16_MIN;
+	if (s > INT16_MAX)
+		return INT16_MAX;
+	return (int16_t)s;
+}
+
 static void callback(void* userdata, uint8_t* stream, int len) {
-	int16_t* str = (int16_t*)stream;
+	int16_t* stream16 = (int16_t*)stream;
 	for (int n = 0; n < len / 2; n++) {
 		// bad mixing...
-		*str++ = (getNextSample(channels[0]) / 4) + (getNextSample(channels[1]) / 4) +
-		         (getNextSample(channels[2]) / 4) + (getNextSample(channels[3]) / 4);
+		int32_t sum = 0;
+		for (int n = 0; n < NUM_CHANNELS; n++) {
+			sum += getNextSample(channels[n]) / 2;
+		}
+		*stream16++ = clamp(sum);
 	}
 }
 
@@ -101,6 +112,12 @@ void AUDIO_Play(int id, int chan, bool loop) {
 	ci.playing = true;
 	SDL_LockAudioDevice(audioDevice);
 	channels[chan] = ci;
+	SDL_UnlockAudioDevice(audioDevice);
+}
+
+void AUDIO_Stop(int chan) {
+	SDL_LockAudioDevice(audioDevice);
+	channels[chan].playing = false;
 	SDL_UnlockAudioDevice(audioDevice);
 }
 
