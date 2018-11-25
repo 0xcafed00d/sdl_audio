@@ -16,16 +16,21 @@ struct Wav {
 	uint32_t numSamples;
 };
 
-std::vector<Wav> loadedWavs;
-
-SDL_AudioDeviceID audioDevice = 0;
-
 struct Channel {
 	Wav* wav = nullptr;
 	uint32_t current = 0;
 	bool loop = false;
 	bool playing = false;
 };
+
+std::vector<Wav> loadedWavs;
+SDL_AudioDeviceID audioDevice = 0;
+std::array<Channel, NUM_CHANNELS> channels;
+
+static void throw_error(std::string msg) {
+	msg += SDL_GetError();
+	throw(audio_exception(msg));
+}
 
 inline int16_t getNextSample(Channel& c) {
 	if (!c.playing)
@@ -40,13 +45,6 @@ inline int16_t getNextSample(Channel& c) {
 		}
 	}
 	return c.wav->sampleData[c.current++];
-}
-
-std::array<Channel, NUM_CHANNELS> channels;
-
-static void throw_error(std::string msg) {
-	msg += SDL_GetError();
-	throw(audio_exception(msg));
 }
 
 inline int16_t clamp(int32_t s) {
@@ -93,7 +91,7 @@ void AUDIO_Shutdown() {
 	SDL_CloseAudioDevice(audioDevice);
 
 	for (auto& wav : loadedWavs) {
-		SDL_FreeWAV((uint8_t*)(wav.sampleData);
+		SDL_FreeWAV((uint8_t*)(wav.sampleData));
 	}
 
 	SDL_QuitSubSystem(SDL_INIT_AUDIO);
@@ -132,7 +130,7 @@ void AUDIO_Stop(int chan) {
 	SDL_UnlockAudioDevice(audioDevice);
 }
 
-bool AUDIO_Playing(int chan) {
+bool AUDIO_isPlaying(int chan) {
 	SDL_LockAudioDevice(audioDevice);
 	bool playing = channels[chan].playing;
 	SDL_UnlockAudioDevice(audioDevice);

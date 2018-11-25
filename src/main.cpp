@@ -16,7 +16,7 @@ int main(void) {
 
 		AUDIO_Play(musicid, 0, true);
 
-		while (AUDIO_Playing(0)) {
+		while (AUDIO_isPlaying(0)) {
 			SDL_Delay(1000);
 			AUDIO_Play(sfx0id, 1, false);
 		}
