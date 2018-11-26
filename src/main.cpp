@@ -17,8 +17,8 @@ int main(void) {
 		AUDIO_Play(musicid, 0, true);
 
 		while (AUDIO_isPlaying(0)) {
-			SDL_Delay(1000);
-			AUDIO_Play(sfx0id, 1, false);
+			if (!AUDIO_isPlaying(1))
+				AUDIO_Play(sfx0id, 1, false);
 		}
 	} catch (audio_exception& err) {
 		std::cerr << err.what() << std::endl;
